@@ -1,10 +1,16 @@
-'use client'; // Dies ganz oben in Ihrer Datei hinzufügen
+'use client'; // Dies ganz oben in Ihrer Datei hinzufügen, falls Next.js 13 und SSR verwendet wird
 import React, { useEffect, useState } from 'react';
-import { fetchData } from './api/solar-status';
 
 interface PowerEntry {
   time: string;
   power: number;
+}
+
+interface ResponseData {
+  records: {
+    Pdc: Array<[number, number]>;
+    bs: Array<[number, number, number, number]>;
+  };
 }
 
 function Page() {
@@ -12,26 +18,27 @@ function Page() {
   const [batteryCharge, setBatteryCharge] = useState<number | null>(null);
   const [error, setError] = useState<string>('');
 
-  const updateData = () => {
-    fetchData()
-      .then(response => {
-        const lastPowerEntry = response.records.Pdc[response.records.Pdc.length - 1];
-        const lastBatteryEntry = response.records.bs[response.records.bs.length - 1];
-        setCurrentPower({
-          time: new Date(lastPowerEntry[0]).toLocaleTimeString(),
-          power: lastPowerEntry[1]
-        });
-        setBatteryCharge(lastBatteryEntry[1]);
-      })
-      .catch(err => {
-        setError('Fehler beim Laden der Daten.');
-        console.error("Fehler beim Laden der Daten:", err);
+  // Funktion zum Abrufen der Daten
+  const fetchSolarData = async () => {
+    try {
+      const res = await fetch('../../api/solar');
+      const data: ResponseData = await res.json();
+      const lastPowerEntry = data.records.Pdc[data.records.Pdc.length - 1];
+      const lastBatteryEntry = data.records.bs[data.records.bs.length - 1];
+      setCurrentPower({
+        time: new Date(lastPowerEntry[0]).toLocaleTimeString(),
+        power: lastPowerEntry[1]
       });
+      setBatteryCharge(lastBatteryEntry[1]);
+    } catch (err) {
+      setError('Fehler beim Laden der Daten.');
+      console.error("Fehler beim Laden der Daten:", err);
+    }
   };
 
   useEffect(() => {
-    updateData();
-    const intervalId = setInterval(updateData, 5000);
+    fetchSolarData();
+    const intervalId = setInterval(fetchSolarData, 5000);
 
     return () => clearInterval(intervalId);
   }, []);
