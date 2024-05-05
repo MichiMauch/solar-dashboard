@@ -18,15 +18,41 @@ function Page() {
   if (!data) return <div>Lade Daten...</div>;
 
   return (
-    <div>
-      <h1>Solaranlagen Dashboard - {currentTime}</h1>
-      <PowerDisplay powerData={data.records.Pdc} onTimeUpdate={setCurrentTime} />
-      <BatteryDisplay batteryStatus={data.records.bs} />
-      <TodayProductionDisplay records={data.records.total_solar_yield} />
-      <TodayConsumptionDisplay records={data.records.total_consumption} />
-      <CurrentConsumptionDisplay consumption={data.records.total_consumption[0][1] * 1000} />
+    <div className="h-screen">
+      <div className="text-center p-4"> {/* Zentrierter Textbereich für den Titel */}
+        <h1 className="text-3xl font-bold text-gray-700">Solaranlagen Dashboard - {currentTime}</h1>
+      </div>
+      <div className="flex flex-wrap -mx-2">
+        <div className="w-full sm:w-1/2 p-2">
+          <div className="bg-red-500 p-4 h-full"> {/* PowerDisplay in einer roten Box */}
+            <PowerDisplay powerData={data.records.Pdc} onTimeUpdate={setCurrentTime} />
+          </div>
+        </div>
+        <div className="w-full sm:w-1/2 p-2">
+          <div className="bg-green-500 p-4 h-full"> {/* BatteryDisplay in einer grünen Box */}
+            <BatteryDisplay batteryStatus={data.records.bs} />
+          </div>
+        </div>
+        <div className="w-full sm:w-1/2 p-2">
+          <div className="bg-yellow-500 p-4 h-full"> {/* TodayProductionDisplay in einer gelben Box */}
+            <TodayProductionDisplay records={data.records.total_solar_yield} />
+          </div>
+        </div>
+        <div className="w-full sm:w-1/2 p-2">
+          <div className="bg-purple-500 p-4 h-full"> {/* Combined Consumption Displays in einer lila Box */}
+            <TodayConsumptionDisplay records={data.records.total_consumption} />
+          </div>
+        </div>
+        <div className="w-full sm:w-1/2 p-2">
+          <div className="bg-purple-500 p-4 h-full"> {/* Combined Consumption Displays in einer lila Box */}
+            <CurrentConsumptionDisplay consumption={data.records.total_consumption[0][1] * 1000} />
+          </div>
+        </div>
+      </div>
     </div>
   );
+  
+  
 }
 
 export default Page;
