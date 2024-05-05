@@ -1,73 +1,30 @@
-'use client'; // Dies ganz oben in Ihrer Datei hinzufügen, falls Next.js 13 und SSR verwendet wird
-import React, { useEffect, useState } from 'react';
-
-interface PowerEntry {
-  time: string;
-  power: number;
-}
-
-interface ResponseData {
-  records: {
-    Pdc: Array<[number, number]>;
-    bs: Array<[number, number, number, number]>;
-    total_solar_yield: Array<[number, number]>;
-    total_consumption: Array<[number, number]>; // Hinzufügen dieser Zeile
-  };
-}
-
+// src/pages/Page.tsx
+'use client';
+import React, { useState } from 'react';
+import useIntervalFetch from '../hooks/useIntervalFetch';
+import PowerDisplay from '../components/PowerDisplay';
+import BatteryDisplay from '../components/BatteryDisplay';
+import TodayProductionDisplay from '../components/TodayProductionDisplay';
+import CurrentConsumptionDisplay from '../components/CurrentConsumptionDisplay';
+import TodayConsumptionDisplay from '../components/TodayConsumptionDisplay'; 
 
 function Page() {
-  const [currentPower, setCurrentPower] = useState<PowerEntry>({ time: '', power: 0 });
-  const [batteryCharge, setBatteryCharge] = useState<number | null>(null);
-  const [currentConsumption, setCurrentConsumption] = useState<number>(0);
-  const [todayProduction, setTodayProduction] = useState<number>(0);
-  const [error, setError] = useState<string>('');
+  const { data, error } = useIntervalFetch();
+  const [currentTime, setCurrentTime] = useState('');  // Zustand für die Zeit
 
-  // Funktion zum Abrufen der Daten
-  const fetchSolarData = async () => {
-    try {
-      const res = await fetch('../../api/solar');
-      const data: ResponseData = await res.json();
-      const lastPowerEntry = data.records.Pdc[data.records.Pdc.length - 1];
-      const lastBatteryEntry = data.records.bs[data.records.bs.length - 1];
-      const lastConsumptionEntry = data.records.total_consumption[data.records.total_consumption.length - 1];
-      const today = new Date().setHours(0, 0, 0, 0);
-      const todayProductionSum = data.records.total_solar_yield
-        .filter(entry => new Date(entry[0]).setHours(0, 0, 0, 0) === today)
-        .reduce((acc, curr) => acc + (curr[1]), 0); // Umrechnung von kWh in Wh und Summation
-
-      setCurrentPower({
-        time: new Date(lastPowerEntry[0]).toLocaleTimeString(),
-        power: lastPowerEntry[1]
-      });
-      setBatteryCharge(lastBatteryEntry[1]);
-      setCurrentConsumption(lastConsumptionEntry[1] * 1000); // Umrechnung von kWh in Wh
-      setTodayProduction(todayProductionSum);
-    } catch (err) {
-      setError('Fehler beim Laden der Daten.');
-      console.error("Fehler beim Laden der Daten:", err);
-    }
-  };
-
-  useEffect(() => {
-    fetchSolarData();
-    const intervalId = setInterval(fetchSolarData, 5000);
-
-    return () => clearInterval(intervalId);
-  }, []);
+  if (error) {
+    return <div>Fehler beim Laden der Daten: {error}. Bitte versuchen Sie es später erneut oder kontaktieren Sie den Support.</div>;
+  }
+  if (!data) return <div>Lade Daten...</div>;
 
   return (
     <div>
-      <h1>Solaranlagen Dashboard</h1>
-      <p>Aktuelle Leistung: {currentPower.time} - {currentPower.power.toFixed(2)} Watt</p>
-      {batteryCharge !== null ? (
-        <p>Aktuelle Batterieladung: {batteryCharge.toFixed(2)}%</p>
-      ) : (
-        <p>Batterieladung wird geladen...</p>
-      )}
-      <p>Aktuelle Last: {currentConsumption.toFixed(2)} Wh</p>
-      <p>Heute erzeugter Strom: {todayProduction.toFixed(2)} kWh</p>
-      {error && <p>{error}</p>}
+      <h1>Solaranlagen Dashboard - {currentTime}</h1>
+      <PowerDisplay powerData={data.records.Pdc} onTimeUpdate={setCurrentTime} />
+      <BatteryDisplay batteryStatus={data.records.bs} />
+      <TodayProductionDisplay records={data.records.total_solar_yield} />
+      <TodayConsumptionDisplay records={data.records.total_consumption} />
+      <CurrentConsumptionDisplay consumption={data.records.total_consumption[0][1] * 1000} />
     </div>
   );
 }
