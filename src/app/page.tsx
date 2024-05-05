@@ -44,7 +44,7 @@ function Page() {
           </div>
         </div>
         <div className="w-full sm:w-1/2 p-2">
-          <div className="bg-purple-500 p-4 h-full"> {/* Combined Consumption Displays in einer lila Box */}
+          <div className="bg-orange-500 p-4 h-full"> {/* Combined Consumption Displays in einer lila Box */}
             <CurrentConsumptionDisplay consumption={data.records.total_consumption[0][1] * 1000} />
           </div>
         </div>
