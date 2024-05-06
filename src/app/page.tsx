@@ -21,6 +21,7 @@ function Page() {
     <div className="h-screen">
       <div className="text-center p-4"> {/* Zentrierter Textbereich für den Titel */}
         <h1 className="text-3xl font-bold text-gray-700">Solaranlagen Dashboard - {currentTime}</h1>
+        <p>Die Webseite aktualisiert die Daten alle 5 Sekunden, wobei die angezeigten Informationen eine Verzögerung von 15 Minuten aufweisen.</p>
       </div>
       <div className="flex flex-wrap -mx-2">
         <div className="w-full sm:w-1/2 p-2">
