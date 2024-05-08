@@ -7,6 +7,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "KOKOMO Solar Dashboard",
   description: "Live Data from the Victron System",
+  openGraph: {
+    title: "KOKOMO Solar Dashboard 2"
+  }
 };
 
 export default function RootLayout({

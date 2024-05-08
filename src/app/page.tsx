@@ -7,6 +7,8 @@ import BatteryDisplay from '../components/BatteryDisplay';
 import TodayProductionDisplay from '../components/TodayProductionDisplay';
 import CurrentConsumptionDisplay from '../components/CurrentConsumptionDisplay';
 import TodayConsumptionDisplay from '../components/TodayConsumptionDisplay'; 
+import DashboardHeader from '../components/DashboardHeader'; 
+
 
 function Page() {
   const { data, error } = useIntervalFetch();
@@ -18,34 +20,41 @@ function Page() {
   if (!data) return <div>Lade Daten...</div>;
 
   return (
-    <div className="h-screen">
-      <div className="text-center p-4"> {/* Zentrierter Textbereich für den Titel */}
-        <h1 className="text-3xl font-bold text-gray-700">Solaranlagen Dashboard - {currentTime}</h1>
-        <p>Die Webseite aktualisiert die Daten alle 5 Sekunden, wobei die angezeigten Informationen eine Verzögerung von 15 Minuten aufweisen.</p>
+    <div className="h-screen flex flex-col">
+      {/* Erste Zeile: Nur DashboardHeader */}
+      <div className="text-center p-4">
+        <DashboardHeader currentTime={currentTime} />
       </div>
-      <div className="flex flex-wrap -mx-2">
-        <div className="w-full sm:w-1/2 p-2">
-          <div className="bg-red-500 p-4 h-full"> {/* PowerDisplay in einer roten Box */}
+
+      {/* Zweite Zeile: Zwei Spalten mit den anderen Komponenten */}
+      <div className="flex flex-col lg:flex-row flex-grow">
+        {/* Hauptinhalt: PowerDisplay und weitere Displays */}
+        <div className="w-full lg:w-2/3 p-2 flex flex-wrap">
+          <div className="w-full lg:w-1/2 p-2"> {/* PowerDisplay in einer roten Box */}
             <PowerDisplay powerData={data.records.Pdc} onTimeUpdate={setCurrentTime} />
           </div>
-        </div>
-        <div className="w-full sm:w-1/2 p-2">
-          <div className="bg-green-500 p-4 h-full"> {/* BatteryDisplay in einer grünen Box */}
-            <BatteryDisplay batteryStatus={data.records.bs} />
-          </div>
-        </div>
-        <div className="w-full sm:w-1/2 p-2">
-          <div className="bg-yellow-500 p-4 h-full"> {/* TodayProductionDisplay in einer gelben Box */}
+          <div className="w-full lg:w-1/2 p-2"> {/* TodayProductionDisplay in einer gelben Box */}
             <TodayProductionDisplay records={data.records.total_solar_yield} />
           </div>
-        </div>
-        <div className="w-full sm:w-1/2 p-2">
-          <div className="bg-purple-500 p-4 h-full"> {/* Combined Consumption Displays in einer lila Box */}
+          <div className="w-full lg:w-1/2 p-2"> {/* TodayConsumptionDisplay in einer lila Box */}
             <TodayConsumptionDisplay records={data.records.total_consumption} />
+          </div>
+          <div className="w-full lg:w-1/2 p-2"> {/* Platz für ein viertes Element */}
+            {/* Platzhalter oder weiteres Display hier einfügen */}
+          </div>
+        </div>
+        
+        {/* Rechte Spalte (auf kleinen Bildschirmen am Ende): Nur BatteryDisplay */}
+        <div className="w-full lg:w-1/3 p-2 flex flex-col">
+          <div className="p-4 h-full"> {/* BatteryDisplay in einer grünen Box */}
+            <BatteryDisplay batteryStatus={data.records.bs} />
           </div>
         </div>
       </div>
     </div>
+
+
+
   );
   
   
