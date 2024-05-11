@@ -8,7 +8,6 @@ import TodayProductionDisplay from '../components/TodayProductionDisplay';
 import CurrentConsumptionDisplay from '../components/CurrentConsumptionDisplay';
 import TodayConsumptionDisplay from '../components/TodayConsumptionDisplay';
 import DashboardHeader from '../components/DashboardHeader';
-import MonthlyPowerDisplay from '../components/MonthlyPowerDisplay';
 import SolarYieldDisplay from '../components/SolarYieldDisplay';
 import SolarMonthlyDisplay from '../components/SolarMonthlyDisplay';
 import SolarMonthlyChart from '../components/SolarMonthlyChart';
