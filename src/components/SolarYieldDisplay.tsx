@@ -4,7 +4,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 
 
 
-// Definition der Schnittstelle für die Daten
+// Definition der Schnittstelle fÃ¼r die Daten
 interface SolarYieldData {
   timestamp: number;
   total_solar_yield: number;
@@ -23,7 +23,7 @@ const fetchSolarYieldData = async (): Promise<SolarYieldData[]> => {
 // Funktion zur Formatierung des Datums aus Unix-Zeitstempeln
 const formatDate = (timestamp: number): { weekday: string, day: string, month: string } => {
   const date = new Date(timestamp);
-  const weekday = date.toLocaleDateString("de-DE", { weekday: 'long' }); // Abkürzung des Wochentags
+  const weekday = date.toLocaleDateString("de-DE", { weekday: 'long' }); // AbkÃ¼rzung des Wochentags
   const day = date.toLocaleDateString("de-DE", { day: 'numeric' }); // Tag im Monat
   const month = date.toLocaleDateString("de-DE", { month: 'long' }); // Monat als Name
 
@@ -31,7 +31,7 @@ const formatDate = (timestamp: number): { weekday: string, day: string, month: s
 };
 
 
-// Ihre React-Komponente zur Anzeige der Solarerträge
+// Ihre React-Komponente zur Anzeige der SolarertrÃ¤ge
 const SolarYieldDisplay: React.FC = () => {
   const [solarYieldData, setSolarYieldData] = useState<SolarYieldData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,7 +50,7 @@ const SolarYieldDisplay: React.FC = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  // Berechnen des letzten Monatsnamens für die Anzeige
+  // Berechnen des letzten Monatsnamens fÃ¼r die Anzeige
   const lastMonthName = solarYieldData.length ? new Date(solarYieldData[solarYieldData.length - 1].timestamp).toLocaleDateString("de-DE", { month: 'long', year: 'numeric' }) : "";
 
 
