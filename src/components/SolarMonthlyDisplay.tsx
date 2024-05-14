@@ -42,15 +42,20 @@ const SolarMonthlyDisplay: React.FC = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="flex flex-col items-center justify-center">
+  <div className="relative flex flex-col text-gray-700 bg-white shadow-md w-96 rounded-xl bg-clip-border">
+    <nav className="flex min-w-[240px] flex-col gap-1 p-2 font-sans text-base font-normal text-blue-gray-700">
       {solarMonthData.map((month, index) => (
-        <div key={index} className="bg-green-200 p-4 m-2 rounded-lg shadow-lg w-full">
-          <h3 className="font-bold text-lg">{formatDate(month.timestamp)}</h3>
-          <p>Gesamtertrag: {month.total_solar_yield.toFixed(2)} kWh</p>
-        </div>
+        <div role="button" className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900">
+          <div className="text-m mt-1">{formatDate(month.timestamp)}</div> 
+            <div className="grid ml-auto place-items-center justify-self-end">
+              <div className="relative grid items-center px-2 py-1 font-sans text-xs font-bold text-gray-900 rounded-full select-none whitespace-nowrap bg-green-600/30">
+                <span className="">{month.total_solar_yield.toFixed(2)} kWh</span>
+              </div>
+            </div>
+          </div> 
       ))}
-    </div>
-  );
+    </nav>
+  </div>  );
 };
 
 export default SolarMonthlyDisplay;

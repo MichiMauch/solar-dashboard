@@ -45,52 +45,48 @@ function Page() {
   </div>
 
   {/* Zweite Zeile: Drei Komponenten in drei Spalten */}
-  <div className="flex flex-row justify-between p-2">
-    <div className="w-1/3 p-2"> {/* PowerDisplay in einer roten Box */}
+  <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 p-2 mx-auto max-w-screen-xl">
+    <div className="w-full p-2">
       <PowerDisplay powerData={data.records.Pdc} onTimeUpdate={setCurrentTime} />
     </div>
-    <div className="w-1/3 p-2"> {/* TodayProductionDisplay in einer gelben Box */}
+    <div className="w-full p-2">
       <TodayProductionDisplay records={data.records.total_solar_yield} />
     </div>
-    <div className="w-1/3 p-2"> {/* TodayConsumptionDisplay in einer lila Box */}
+    <div className="w-full lg:col-span-2 xl:col-span-1 p-2">
       <TodayConsumptionDisplay records={data.records.total_consumption} />
     </div>
   </div>
 
-  {/* Dritte Zeile: Weitere drei Komponenten in drei Spalten */}
-  <div className="flex flex-col">
-  {/* Erste Zeile nur für SolarYieldDisplay in einer eigenen Spalte */}
-  <div className="w-3/3 p-2"> 
-    <SolarYieldDisplay />
-</div>
-
-
-
-  {/* Zweite Zeile für SolarMonthlyDisplay und BatteryDisplay in zwei Spalten */}
-  <div className="flex flex-row justify-between p-2">
-    <div className="w-1/2 p-2"> {/* SolarMonthlyDisplay in einer grünen Box */}
-      <div className="bg-green-500 p-4 rounded shadow">
-        <SolarMonthlyDisplay />
-      </div>
-    </div>
-    <div className="w-1/2 p-2"> {/* BatteryDisplay in einer blauen Box */}
-      <div className="bg-blue-500 p-4 rounded shadow">
-        <BatteryDisplay batteryStatus={data.records.bs} />
-      </div>
-    </div>
+{/* Dritte Zeile: Drei Komponenten in drei Spalten */}
+<div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 p-2 mx-auto max-w-screen-xl">
+  <div className="w-full p-2 h-96"> {/* feste Höhe */}
+    <SolarMonthlyDisplay />
+  </div>
+  <div className="w-full p-2 h-96"> {/* feste Höhe */}
+    <SolarYieldDisplay />     
+  </div>
+  <div className="w-full lg:col-span-2 xl:col-span-1 p-2 h-96"> {/* feste Höhe */}
+    <BatteryDisplay batteryStatus={data.records.bs} />
   </div>
 </div>
 
 
-  {/* Vierte Zeile: SolarMonthlyChart in einer vollen Breite */}
-  <div className="w-full p-2">
-    <div className="flex justify-center">
-      <div className="w-full max-w-4xl"> {/* Gibt dem Diagramm eine Maximalbreite */}
+
+{/* Vierte Zeile: SolarMonthlyChart in einer vollen Breite */}
+<div className="w-full p-2">
+  <div className="flex justify-center">
+    <div className="w-full max-w-4xl"> {/* Gibt dem Diagramm eine Maximalbreite */}
+      <div className="relative flex flex-col text-gray-700 bg-white shadow-md rounded-xl bg-clip-border p-2">
         <SolarMonthlyChart />
       </div>
     </div>
   </div>
 </div>
+
+
+
+</div>
+
 
   );
 }

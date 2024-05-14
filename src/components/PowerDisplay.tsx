@@ -17,22 +17,18 @@ const PowerDisplay: React.FC<PowerDisplayProps> = ({ powerData, onTimeUpdate }) 
   }, [time, onTimeUpdate]);
 
   return (
-    <>
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet" />
-
-      <div className="flex w-full">
-        <div className="flex-1 m-5 relative rounded bg-gray-200 shadow">
-            <div className="bg-yellow-500 p-2 ml-3 absolute top-0 -mt-4 -mr-4 rounded text-white fill-current shadow flex items-center justify-center" style={{ width: '50px', height: '50px' }}>
-                <i className="fas fa-sun text-2xl inline-block w-5"></i>
+    <div className="relative flex flex-col text-gray-700 bg-white shadow-md w-96 rounded-xl bg-clip-border max-w-full">
+    <nav className="flex min-w-[240px] flex-col gap-1 p-2 font-sans text-base font-normal text-blue-gray-700">
+        <div role="button" className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900">
+          <div className="text-lg mt-1">Aktuelle Stromgenerierung</div> 
+            <div className="grid ml-auto place-items-center justify-self-end">
+              <div className="relative grid items-center px-2 py-1 font-sans text-m font-bold text-gray-900 rounded-full select-none whitespace-nowrap bg-yellow-600/30">
+                <span className="">{power.toFixed(2)} W</span>
+              </div>
             </div>
-  
-            <div className="float-right top-0 right-0 m-3">
-                <div className="text-right text-sm text-black">Aktuelle Stromgenerierung in Watt</div>
-                <div className="text-right text-3xl text-black">{power.toFixed(2)}</div>
-            </div>
-        </div>
-      </div>
-    </>
+          </div> 
+    </nav>
+  </div>
   );
 };
 

@@ -7,7 +7,7 @@ const getLastFiveMonthsTimestamps = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Setzt die Uhrzeit auf Mitternacht
   
-    for (let i = 5; i >= 0; i--) {
+    for (let i = 6; i >= 0; i--) {
       const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
       const start = date.getTime(); // Start des Monats
       date.setMonth(date.getMonth() + 1, 0); // Letzter Tag des Monats

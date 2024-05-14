@@ -21,11 +21,13 @@ const fetchSolarYieldData = async (): Promise<SolarYieldData[]> => {
 };
 
 // Funktion zur Formatierung des Datums aus Unix-Zeitstempeln
-const formatDate = (timestamp: number): { weekday: string, day: string } => {
+const formatDate = (timestamp: number): { weekday: string, day: string, month: string } => {
   const date = new Date(timestamp);
-  const weekday = date.toLocaleDateString("de-DE", { weekday: 'short' }); // Abkürzung des Wochentags
+  const weekday = date.toLocaleDateString("de-DE", { weekday: 'long' }); // Abkürzung des Wochentags
   const day = date.toLocaleDateString("de-DE", { day: 'numeric' }); // Tag im Monat
-  return { weekday, day };
+  const month = date.toLocaleDateString("de-DE", { month: 'long' }); // Monat als Name
+
+  return { weekday, day, month };
 };
 
 
@@ -54,36 +56,25 @@ const SolarYieldDisplay: React.FC = () => {
 
   return (
     
-    <div className="flex flex-col items-center justify-center bg-gray-200 shadow w-full">
-      <h2 className="text-xl text-black font-bold mb-4">{lastMonthName} - Stromgenerierung</h2>
-      <div className="flex w-full justify-between">
-        {solarYieldData.map((day, index) => {
+    <div className="relative flex flex-col text-gray-700 bg-white shadow-md w-96 rounded-xl bg-clip-border">
+      <nav className="flex min-w-[240px] flex-col gap-1 p-2 font-sans text-base font-normal text-blue-gray-700">
+         {solarYieldData.map((day, index) => {
           const { weekday, day: dayOfMonth } = formatDate(day.timestamp);
           return (
-            <div key={index} className="relative flex flex-grow flex-col items-start rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] dark:border-[#ffffff33] dark:bg-navy-800 dark:text-white dark:shadow-none m-1" style={{ height: 'auto' }}>
-            <div className="flex w-auto flex-row items-center" style={{ height: '45px' }}>  {/* Reduzierte Höhe */}
-              <div className="ml-[-10px] rounded-full bg-lightPrimary p-3 dark:bg-navy-700">
-                <span className="bg-yellow-500 p-2 ml-3 absolute top-0 -mt-4 -mr-4 rounded text-white fill-current shadow flex flex-col items-center justify-center" style={{ width: '60px', height: '60px' }}>
-                  <NumberIcons number={dayOfMonth} />
-                  <div className="text-xs mt-1">{weekday}</div> 
-                </span>
-              </div>
+            <div role="button" className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900">
+              <div className="text-m mt-1">{weekday}, {dayOfMonth}. {lastMonthName}</div> 
+                <div className="grid ml-auto place-items-center justify-self-end">
+                  <div className="relative grid items-center px-2 py-1 font-sans text-xs font-bold text-gray-900 rounded-full select-none whitespace-nowrap bg-green-600/30">
+                    <span className="">{day.total_solar_yield.toFixed(2)} kWh</span>
+                  </div>
+                </div>
             </div>
-            <div className="flex flex-grow w-full" style={{ height: 'auto' }}>
-              <div className="flex flex-col flex-grow justify-end items-end p-4">
-                <h4 className="text-2xl text-navy-700 dark:text-black">{day.total_solar_yield.toFixed(2)} kWh</h4>
-              </div>
-            </div>
-          </div>
-          
-
           );
         })}
-      </div>
+      </nav>
     </div>
   );
 };
 
 export default SolarYieldDisplay;
-
-
+  
