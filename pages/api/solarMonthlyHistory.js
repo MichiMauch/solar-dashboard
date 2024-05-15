@@ -7,7 +7,7 @@ const getLastFiveMonthsTimestamps = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Setzt die Uhrzeit auf Mitternacht
   
-    for (let i = 6; i >= 0; i--) {
+    for (let i = 5; i >= 0; i--) {
       const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
       const start = date.getTime(); // Start des Monats
       date.setMonth(date.getMonth() + 1, 0); // Letzter Tag des Monats
@@ -26,20 +26,24 @@ export default async function handler(req, res) {
     headers: { 'x-authorization': `Bearer ${accessToken}` }
   };
 
-  try {
-    const results = await Promise.all(
-      timestamps.map(async ({ start, end }) => {
-        const response = await axios.get(`https://vrmapi.victronenergy.com/v2/installations/193415/stats?interval=months&start=${start}&end=${end}`, config);
-        // Zugriff auf den Ertragswert, wenn vorhanden, sonst 0 als Standardwert
-        const totalSolarYield = response.data.records && response.data.records.total_solar_yield
-          ? response.data.records.total_solar_yield[0][1]
-          : 0;
-        return { timestamp: start, total_solar_yield: totalSolarYield };
-      })
-    );
-    res.status(200).json(results); // Sendet die umgeformten Ergebnisse zurück
-  } catch (error) {
-    console.error('Fehler beim Abrufen der monatlichen Solar-Daten:', error);
-    res.status(500).json({ message: 'Fehler beim Abrufen der historischen Daten', error });
-  }
+  // Im API Handler, um Daten für den Verbrauch zu integrieren
+try {
+  const results = await Promise.all(
+    timestamps.map(async ({ start, end }) => {
+      const response = await axios.get(`https://vrmapi.victronenergy.com/v2/installations/193415/stats?interval=months&start=${start}&end=${end}`, config);
+      const totalSolarYield = response.data.records && response.data.records.total_solar_yield
+        ? response.data.records.total_solar_yield[0][1]
+        : 0;
+      const totalConsumption = response.data.records && response.data.records.total_consumption
+        ? response.data.records.total_consumption[0][1]
+        : 0; // Annahme, dass das Feld so heißt
+      return { timestamp: start, total_solar_yield: totalSolarYield, total_consumption: totalConsumption };
+    })
+  );
+  res.status(200).json(results);
+} catch (error) {
+  console.error('Fehler beim Abrufen der Daten:', error);
+  res.status(500).json({ message: 'Fehler beim Abrufen der historischen Daten', error });
+}
+
 }
