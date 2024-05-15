@@ -13,28 +13,27 @@ const BatteryDisplay: React.FC<BatteryDisplayProps> = ({ batteryStatus }) => {
   const circumference = 2 * Math.PI * radius; // Umfang des Kreises
 
   return charge !== null ? (
-    <div className="relative flex items-center justify-center h-96 w-96 bg-white shadow-md rounded-xl bg-clip-border p-4">
+<div className="relative flex items-center justify-center h-full bg-white shadow-md rounded-xl bg-clip-border p-4">
   <svg width="100%" height="100%" viewBox="0 0 300 300" className="transform -rotate-90">
-  <circle
-    cx="150"
-    cy="150"
-    r={radius}
-    strokeWidth={strokeWidth}
-    stroke="#4B5563"
-    fill="transparent"
-  />
-  <circle
-    cx="150"
-    cy="150"
-    r={radius}
-    strokeWidth={strokeWidth}
-    stroke="#10B981"
-    fill="transparent"
-    strokeDasharray={circumference}
-    strokeDashoffset={circumference - (charge / 100) * circumference}
-  />
-</svg>
-
+    <circle
+      cx="150"
+      cy="150"
+      r={radius}
+      strokeWidth={strokeWidth}
+      stroke="#4B5563"
+      fill="transparent"
+    />
+    <circle
+      cx="150"
+      cy="150"
+      r={radius}
+      strokeWidth={strokeWidth}
+      stroke="#10B981"
+      fill="transparent"
+      strokeDasharray={circumference}
+      strokeDashoffset={circumference - (charge / 100) * circumference}
+    />
+  </svg>
   <div className="absolute flex flex-col items-center justify-center" style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
     <span className="text-3xl text-black">
       {`${charge.toFixed(2)}%`}
@@ -42,6 +41,7 @@ const BatteryDisplay: React.FC<BatteryDisplayProps> = ({ batteryStatus }) => {
     <div className="text-lg text-black mt-1 text-sm">Batterieladung</div>
   </div>
 </div>
+
 
   ) : (
     <p>Batterieladung wird geladen...</p>

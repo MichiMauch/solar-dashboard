@@ -12,21 +12,24 @@ const TodayProductionDisplay: React.FC<TodayProductionDisplayProps> = ({ records
     .reduce((acc, [, production]) => acc + production, 0);
 
   return (
-    <div className="relative flex flex-col text-gray-700 bg-white shadow-md w-96 max-w-full rounded-xl bg-clip-border">
-    <nav className="flex min-w-[240px] flex-col gap-1 p-2 font-sans text-base font-normal text-blue-gray-700">
-        <div role="button" className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900">
-          <div className="text-lg mt-1">Heutige Stromproduktion</div> 
-            <div className="grid ml-auto place-items-center justify-self-end">
-              <div className="relative grid items-center px-2 py-1 font-sans text-m font-bold text-gray-900 rounded-full select-none whitespace-nowrap bg-yellow-600/50">
-                <span className="">{todayProductionSum.toFixed(2)} kWh</span>
-              </div>
-            </div>
-          </div> 
-    </nav>
-  </div>
+    <div
+        className="flex flex-col px-4 py-4 overflow-hidden bg-white hover:bg-gradient-to-br hover:from-purple-400 hover:via-blue-400 hover:to-blue-500 rounded-xl shadow-lg duration-300 hover:shadow-2xl group">
+        <div className="flex flex-row justify-between items-center">
+          <div className="px-4 py-4 bg-gray-300  rounded-xl bg-opacity-30">
+          <i className="fa-solid fa-solar-panel text-blue-500 text-3xl"></i>
+          </div>
+          
+        </div>
+        <h1 className="text-3xl sm:text-4xl xl:text-5xl font-bold text-gray-700 mt-6 group-hover:text-gray-50">{todayProductionSum.toFixed(2)} kWh</h1>
+        <div className="flex flex-row justify-between text-gray-700 group-hover:text-gray-200">
+          <p>Heutige Stromproduktion</p>
+        </div>
+      </div>
     
   );
 };
 
 export default TodayProductionDisplay;
 
+      
+    

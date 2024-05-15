@@ -54,37 +54,39 @@ const SolarYieldDisplay: React.FC = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="relative flex flex-col text-gray-700 bg-white shadow-md w-96 rounded-xl bg-clip-border">
-      <div className="flex items-center justify-between p-2 font-sans text-base font-normal text-blue-gray-700 border-b border-gray-300">
-        <div className="flex-grow"></div>
-        <div className="flex space-x-2">
-          <div className="flex-grow text-center">Produktion</div>
-          <div className="flex-grow text-center">Verbrauch</div>
-        </div>
-      </div>
-      <nav className="flex min-w-[240px] flex-col gap-1 p-2 font-sans text-base font-normal text-blue-gray-700">
-        {solarYieldData.map((day) => {
-          const { weekday, day: dayOfMonth, month } = formatDate(day.timestamp);
-          return (
-            <div 
-              key={day.timestamp} 
-              role="button" 
-              className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
-            >
-              <div className="text-m mt-1 flex-grow">{weekday}, {dayOfMonth}. {month}</div>
-              <div className="flex space-x-2">
-                <div className="relative grid items-center px-2 py-1 font-sans text-xs font-bold text-gray-900 rounded-full select-none whitespace-nowrap bg-yellow-600/50">
-                  <span className="">{day.total_solar_yield.toFixed(2)} kWh</span>
-                </div>
-                <div className="relative grid items-center px-2 py-1 font-sans text-xs font-bold text-gray-900 rounded-full select-none whitespace-nowrap bg-blue-600/30">
-                  <span className="">{day.total_consumption.toFixed(2)} kWh</span>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </nav>
+    <div className="relative flex flex-col text-gray-700 bg-white shadow-md rounded-xl bg-clip-border h-full">
+  <div className="flex items-center justify-between p-2 font-sans text-base font-normal text-blue-gray-700 border-b border-gray-300">
+    <div className="flex-grow"></div>
+    <div className="flex space-x-2">
+      <div className="flex-grow text-center">Produktion</div>
+      <div className="flex-grow text-center">Verbrauch</div>
     </div>
+  </div>
+  <nav className="flex min-w-[240px] flex-col gap-1 p-2 font-sans text-base font-normal text-blue-gray-700 overflow-auto">
+    {solarYieldData.map((day) => {
+      const { weekday, day: dayOfMonth, month } = formatDate(day.timestamp);
+      return (
+        <div 
+          key={day.timestamp} 
+          role="button" 
+          className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
+        >
+          <div className="text-m mt-1 flex-grow">{weekday}, {dayOfMonth}. {month}</div>
+          <div className="flex space-x-2">
+            <div className="relative grid items-center px-2 py-1 font-sans text-xs font-bold text-gray-900 rounded-full select-none whitespace-nowrap bg-yellow-600/50">
+              <span className="">{day.total_solar_yield.toFixed(2)} kWh</span>
+            </div>
+            <div className="relative grid items-center px-2 py-1 font-sans text-xs font-bold text-gray-900 rounded-full select-none whitespace-nowrap bg-blue-600/30">
+              <span className="">{day.total_consumption.toFixed(2)} kWh</span>
+            </div>
+          </div>
+        </div>
+      );
+    })}
+  </nav>
+</div>
+
+
   );
 };
 
