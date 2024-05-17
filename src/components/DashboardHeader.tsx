@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 // Definiere ein Interface für die Props
 interface DashboardHeaderProps {
@@ -28,8 +29,9 @@ const DashboardHeader = ({ currentTime }: DashboardHeaderProps) => {
             }
         };
 
-        fetchWeather();
-    }, []);
+        fetchWeather(); // Initial fetch on component mount
+
+    }, []); // Empty dependency array means this effect runs once on mount
 
     return (
         <div className="flex flex-col items-center justify-center gap-3">
@@ -38,12 +40,15 @@ const DashboardHeader = ({ currentTime }: DashboardHeaderProps) => {
             </h1>
             <div className="flex items-center gap-3">
                 {weather.icon && (
-                    <img
-                        id="weather-icon"
-                        className="w-24 h-24 -my-2"
-                        src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
-                        alt="Weather Icon"
-                    />
+                    <div className="relative w-24 h-24 -my-2">
+                        <Image
+                            id="weather-icon"
+                            src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
+                            alt="Weather Icon"
+                            layout="fill"
+                            objectFit="contain"
+                        />
+                    </div>
                 )}
                 {weather.temperature !== null && (
                     <span id="temperature" className="text-xl text-white">
