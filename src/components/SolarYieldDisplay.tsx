@@ -21,7 +21,7 @@ const fetchSolarYieldData = async (): Promise<SolarYieldData[]> => {
 // Funktion zur Formatierung des Datums aus Unix-Zeitstempeln
 const formatDate = (timestamp: number): { weekday: string, day: string, month: string } => {
   const date = new Date(timestamp);
-  const weekday = date.toLocaleDateString("de-DE", { weekday: 'long' }); // Abkürzung des Wochentags
+  const weekday = date.toLocaleDateString("de-DE", { weekday: 'short' }); // Abkürzung des Wochentags
   const day = date.toLocaleDateString("de-DE", { day: 'numeric' }); // Tag im Monat
   const month = date.toLocaleDateString("de-DE", { month: 'long' }); // Monat als Name
 
@@ -55,12 +55,9 @@ const SolarYieldDisplay: React.FC = () => {
 
   return (
     <div className="relative flex flex-col text-gray-700 bg-white shadow-md rounded-xl bg-clip-border h-full">
-  <div className="flex items-center justify-between p-2 font-sans text-base font-normal text-blue-gray-700 border-b border-gray-300">
-    <div className="flex-grow"></div>
-    <div className="flex space-x-2">
-      <div className="flex-grow text-center">Produktion</div>
-      <div className="flex-grow text-center">Verbrauch</div>
-    </div>
+  <div className="flex items-center justify-end p-2 font-sans text-base font-normal text-blue-gray-700 border-b border-gray-300">
+    <div className="w-28 text-middle">Produktion</div>
+    <div className="w-28 text-middle ml-2">Verbrauch</div>
   </div>
   <nav className="flex min-w-[240px] flex-col gap-1 p-2 font-sans text-base font-normal text-blue-gray-700 overflow-auto">
     {solarYieldData.map((day) => {
@@ -73,11 +70,11 @@ const SolarYieldDisplay: React.FC = () => {
         >
           <div className="text-m mt-1 flex-grow">{weekday}, {dayOfMonth}. {month}</div>
           <div className="flex space-x-2">
-            <div className="relative grid items-center px-2 py-1 font-sans text-xs font-bold text-gray-900 rounded-full select-none whitespace-nowrap bg-yellow-600/50">
-              <span className="">{day.total_solar_yield.toFixed(2)} kWh</span>
+            <div className="relative grid items-center px-2 py-1 font-sans font-bold text-gray-900 rounded-full select-none whitespace-nowrap bg-yellow-600/50 w-28 text-right">
+              <span>{day.total_solar_yield.toFixed(2)} kWh</span>
             </div>
-            <div className="relative grid items-center px-2 py-1 font-sans text-xs font-bold text-gray-900 rounded-full select-none whitespace-nowrap bg-blue-600/30">
-              <span className="">{day.total_consumption.toFixed(2)} kWh</span>
+            <div className="relative grid items-center px-2 py-1 font-sans font-bold text-gray-900 rounded-full select-none whitespace-nowrap bg-blue-600/30 w-28 text-right">
+              <span>{day.total_consumption.toFixed(2)} kWh</span>
             </div>
           </div>
         </div>
@@ -85,6 +82,8 @@ const SolarYieldDisplay: React.FC = () => {
     })}
   </nav>
 </div>
+
+  
 
 
   );

@@ -16,9 +16,8 @@ const TodayProductionDisplay: React.FC<TodayProductionDisplayProps> = ({ records
         className="flex flex-col px-4 py-4 overflow-hidden bg-white hover:bg-gradient-to-br hover:from-purple-400 hover:via-blue-400 hover:to-blue-500 rounded-xl shadow-lg duration-300 hover:shadow-2xl group">
         <div className="flex flex-row justify-between items-center">
           <div className="px-4 py-4 bg-gray-300  rounded-xl bg-opacity-30">
-          <i className="fa-solid fa-solar-panel text-blue-500 text-3xl"></i>
+            <i className="fa-solid fa-solar-panel text-blue-500 text-3xl"></i>
           </div>
-          
         </div>
         <h1 className="text-3xl sm:text-4xl xl:text-5xl font-bold text-gray-700 mt-6 group-hover:text-gray-50">{todayProductionSum.toFixed(2)} kWh</h1>
         <div className="flex flex-row justify-between text-gray-700 group-hover:text-gray-200">

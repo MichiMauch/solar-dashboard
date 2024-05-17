@@ -1,13 +1,13 @@
 import axios from 'axios';
 import getToken from '../../src/lib/getToken';
 
-// Funktion, um die Zeitstempel für den Start und das Ende der letzten fünf Monate zu generieren
-const getLastFiveMonthsTimestamps = () => {
+// Funktion, um die Zeitstempel für den Start und das Ende der letzten 24 Monate zu generieren
+const getLastTwentyFourMonthsTimestamps = () => {
   const dates = [];
   const today = new Date();
   today.setHours(0, 0, 0, 0); // Setzt die Uhrzeit auf Mitternacht
 
-  for (let i = 6; i >= 0; i--) {
+  for (let i = 23; i >= 0; i--) {
     const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
     const start = date.getTime(); // Start des Monats
     date.setMonth(date.getMonth() + 1, 0); // Letzter Tag des Monats
@@ -20,7 +20,7 @@ const getLastFiveMonthsTimestamps = () => {
 
 export default async function handler(req, res) {
   console.log('Handler reached');
-  const timestamps = getLastFiveMonthsTimestamps();
+  const timestamps = getLastTwentyFourMonthsTimestamps();
   console.log('Timestamps:', timestamps);
   const accessToken = await getToken();
   console.log('Access token:', accessToken);
@@ -28,27 +28,18 @@ export default async function handler(req, res) {
     headers: { 'x-authorization': `Bearer ${accessToken}` }
   };
 
-  // Im API Handler, um Daten für den Verbrauch zu integrieren
   try {
     const results = await Promise.all(
       timestamps.map(async ({ start, end }) => {
         console.log(`Fetching data for range ${start} - ${end}`);
         const response = await axios.get(`https://vrmapi.victronenergy.com/v2/installations/193415/stats?interval=months&start=${start}&end=${end}`, config);
         console.log('Response:', response.data);
-        const totalSolarYield = response.data.records && response.data.records.total_solar_yield
-          ? response.data.records.total_solar_yield[0][1]
-          : 0;
-        const totalConsumption = response.data.records && response.data.records.total_consumption
-          ? response.data.records.total_consumption[0][1]
-          : 0; // Annahme, dass das Feld so heißt
         const gridHistoryFrom = response.data.records && response.data.records.grid_history_from
           ? response.data.records.grid_history_from[0][1]
           : 0; // Strom von externer Quelle
         return {
           timestamp: start,
-          total_solar_yield: totalSolarYield,
-          total_consumption: totalConsumption,
-          grid_history_from: gridHistoryFrom // Hinzufügen der externen Stromquelle
+          grid_history_from: gridHistoryFrom
         };
       })
     );
