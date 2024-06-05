@@ -48,63 +48,62 @@ export default async function handler(req, res) {
     const imagePath = path.join(process.cwd(), 'public/template.webp');
     const templateBuffer = fs.readFileSync(imagePath);
 
-    // SVG-Inhalte erstellen
-    const svgWidth = 1792;
-    const svgHeight = 1024;
-    const fontSize = 40;
-    const fillColor = 'black';
-
-    const svgContent = `
-      <svg width="${svgWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg" style="background: url('template.webp'); background-size: cover;">
-        <text x="510" y="440" font-size="${fontSize}" fill="${fillColor}" text-anchor="middle">
-          <tspan x="900" dy="0">Produziert:</tspan>
-          <tspan x="892" dy="1.2em">${totalSolarYield} kWh</tspan>
-        </text>
-        <text x="448" y="570" font-size="${fontSize}" fill="${fillColor}" text-anchor="middle">
-          <tspan x="900" dy="0">Verbraucht:</tspan>
-          <tspan x="893" dy="1.2em">${totalConsumption} kWh</tspan>
-        </text>
-        <text x="1216" y="580" font-size="${fontSize}" fill="${fillColor}" text-anchor="middle">
-          <tspan x="1216" dy="0">Peak:</tspan>
-          <tspan x="1216" dy="1.2em">${peakPower} W</tspan>
-        </text>
-        <text x="580" y="465" font-size="${fontSize}" fill="${fillColor}" text-anchor="middle">
-          <tspan x="583" dy="0">Autarkie:</tspan>
-          <tspan x="581" dy="1.2em">${autarkie}%</tspan>
-        </text>
-        <text x="580" y="580" font-size="${fontSize}" fill="${fillColor}" text-anchor="middle">
-          <tspan x="583" dy="0">Vormonat:</tspan>
-          <tspan x="581" dy="1.2em">${autarkieDiffString}%</tspan>
-        </text>
-        <text x="1216" y="465" font-size="36" fill="${fillColor}" text-anchor="middle">
-          <tspan x="1216" dy="0">Extern:</tspan>
-          <tspan x="1216" dy="1.2em">${gridUsage} kWh</tspan>
-        </text>
-      </svg>
-    `;
-    const svgBuffer = Buffer.from(svgContent);
-
-    // Erstelle das Bild mit den Daten
+    // Erstellen Sie das Bild mit Sharp und fügen Sie Texte hinzu
     const image = sharp(templateBuffer)
-      .composite([{ input: svgBuffer, gravity: 'north' }]);
+      .composite([
+        {
+          input: Buffer.from(`
+            <svg width="1792" height="1024">
+              <style>
+                .title { fill: black; font-size: 36px; font-family: 'Open Sans', sans-serif; }
+              </style>
+              <text x="900" y="440" class="title" text-anchor="middle">
+                <tspan x="900" dy="0">Produziert:</tspan>
+                <tspan x="900" dy="1.2em">${totalSolarYield} kWh</tspan>
+              </text>
+              <text x="900" y="570" class="title" text-anchor="middle">
+                <tspan x="900" dy="0">Verbraucht:</tspan>
+                <tspan x="900" dy="1.2em">${totalConsumption} kWh</tspan>
+              </text>
+              <text x="1216" y="580" class="title" text-anchor="middle">
+                <tspan x="1216" dy="0">Peak:</tspan>
+                <tspan x="1216" dy="1.2em">${peakPower} W</tspan>
+              </text>
+              <text x="900" y="465" class="title" text-anchor="middle">
+                <tspan x="583" dy="0">Autarkie:</tspan>
+                <tspan x="581" dy="1.2em">${autarkie}%</tspan>
+              </text>
+              <text x="900" y="580" class="title" text-anchor="middle">
+                <tspan x="583" dy="0">Vormonat:</tspan>
+                <tspan x="581" dy="1.2em">${autarkieDiffString}%</tspan>
+              </text>
+              <text x="1216" y="465" class="title" text-anchor="middle">
+                <tspan x="1216" dy="0">Extern:</tspan>
+                <tspan x="1216" dy="1.2em">${gridUsage} kWh</tspan>
+              </text>
+            </svg>
+          `),
+          top: 0,
+          left: 0
+        }
+      ]);
 
     // Generiere das Bild und konvertiere es in eine Base64-URL
     const outputBuffer = await image.png().toBuffer();
     const base64Image = outputBuffer.toString('base64');
-    const imageUrl = `data:image/png;base64,${base64Image}`;
 
     // Nachricht für die E-Mail
     const message = {
       "html": `
         <h1>KOKOMO Solar-Kennzahlen für den Monat ${lastMonthName}</h1>
-        <p>Produzierter kWh: ${totalSolarYield} kWh.</p>
+        <p>Produzierte kWh: ${totalSolarYield} kWh.</p>
         <p>Verbrauchte kWh: ${totalConsumption} kWh.</p>
-        <p>Höchster Lade-Peak der Batterie am ${peakDateString} mit ${peakPower} W.</p>
+        <p>Höchster Lade-Peak am ${peakDateString} mit ${peakPower} W.</p>
         <p>Autarkie des Jahres: ${autarkie}% (${autarkieDiffString}% gegenüber dem Vormonat).</p>
         <p>Extern bezogener Strom: ${gridUsage} kWh.</p>
       `,
       "subject": `KOKOMO Solar-Kennzahlen für den Monat ${lastMonthName}`,
-      "from_email": "michi.mauch@gmail.com",
+      "from_email": "michi@kokomo.house",
       "from_name": "Michi",
       "to": [
         { "email": "michi.mauch@gmail.com", "name": "Michi" },
