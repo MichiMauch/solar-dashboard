@@ -46,6 +46,7 @@ export default async function handler(req, res) {
 
     // Pfad zur Bildvorlage
     const imagePath = path.join(process.cwd(), 'public/template.webp');
+    const fontPath = path.join(process.cwd(), 'public/fonts/OpenSans-Regular.ttf');
     const templateBuffer = fs.readFileSync(imagePath);
 
     // Erstellen Sie das Bild mit Sharp und fügen Sie Texte hinzu
@@ -55,6 +56,10 @@ export default async function handler(req, res) {
           input: Buffer.from(`
             <svg width="1792" height="1024">
               <style>
+                @font-face {
+                  font-family: 'Open Sans';
+                  src: url('data:font/truetype;base64,${fs.readFileSync(fontPath).toString('base64')}') format('truetype');
+                }
                 .title { fill: black; font-size: 36px; font-family: 'Open Sans', sans-serif; }
               </style>
               <text x="900" y="440" class="title" text-anchor="middle">
@@ -96,9 +101,9 @@ export default async function handler(req, res) {
     const message = {
       "html": `
         <h1>KOKOMO Solar-Kennzahlen für den Monat ${lastMonthName}</h1>
-        <p>Produzierte kWh: ${totalSolarYield} kWh.</p>
+        <p>Produzierter kWh: ${totalSolarYield} kWh.</p>
         <p>Verbrauchte kWh: ${totalConsumption} kWh.</p>
-        <p>Höchster Lade-Peak am ${peakDateString} mit ${peakPower} W.</p>
+        <p>Höchster Lade-Peak der Batterie am ${peakDateString} mit ${peakPower} W.</p>
         <p>Autarkie des Jahres: ${autarkie}% (${autarkieDiffString}% gegenüber dem Vormonat).</p>
         <p>Extern bezogener Strom: ${gridUsage} kWh.</p>
       `,
