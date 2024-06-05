@@ -6,7 +6,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "KOKOMO Solar Dashboard",
-  description: "Live Data from the Victron System",
+  description: "Live-Daten vom Victron-System und KOKOMO Solar Dashboard für Echtzeit-Überwachung und effiziente Solarenergieverwaltung.",
+  robots: "noindex",
   openGraph: {
     title: "KOKOMO Solar Dashboard 2"
   }

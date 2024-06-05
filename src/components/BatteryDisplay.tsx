@@ -131,6 +131,8 @@ const BatteryDisplay: React.FC<BatteryDisplayProps> = ({ batteryStatus }) => {
           cy={innerMarkY(positionCharge)}
           r="8"
           fill="black"
+          stroke="black"
+          strokeWidth="2"
         />
       </svg>
       <div

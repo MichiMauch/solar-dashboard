@@ -75,8 +75,8 @@ function Page() {
                 <div className="w-full lg:w-1/3 p-2">
                   <AutarkieChart1 />
                 </div>
-                <div className="w-full lg:w-2/3 p-2">
-                  <div className="bg-white shadow-md rounded-xl bg-clip-border p-4">
+                <div className="w-full lg:w-2/3 p-2 flex flex-col">
+                  <div className="bg-white shadow-md rounded-xl bg-clip-border p-4 flex-grow h-full">
                     <SolarMonthlyChart />
                   </div>
                 </div>
@@ -85,20 +85,26 @@ function Page() {
                 </div>
               </div>
             </div>
+
             <div className="flex flex-wrap mx-4 md:mx-0 lg:mx-0">
               <div className="flex flex-wrap w-full">
                 <div className="w-full lg:w-1/2 p-2">
-                  <div className="bg-white shadow-md rounded-xl bg-clip-border p-4">
-                    <PeakPowerChart />
+                  <div className="bg-white shadow-md rounded-xl bg-clip-border p-4 h-full flex items-center justify-center">
+                    <div className="w-full h-full">
+                      <PeakPowerChart />
+                    </div>
                   </div>
                 </div>
                 <div className="w-full lg:w-1/2 p-2">
-                  <div className="bg-white shadow-md rounded-xl bg-clip-border p-4">
-                    <ExternalPowerChart />
+                  <div className="bg-white shadow-md rounded-xl bg-clip-border p-4 h-full flex items-center justify-center">
+                    <div className="w-full h-full">
+                      <ExternalPowerChart />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>
