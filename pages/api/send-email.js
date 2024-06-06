@@ -97,6 +97,28 @@ export default async function handler(req, res) {
     const outputBuffer = await image.png().toBuffer();
     const base64Image = outputBuffer.toString('base64');
 
+    // Pfad zur Konfigurationsdatei
+    const configPath = path.join(process.cwd(), 'emailconfig.json');
+
+    // Funktion zum Laden der Konfigurationsdatei
+    const loadConfig = () => {
+      try {
+        const configData = fs.readFileSync(configPath, 'utf8');
+        return JSON.parse(configData);
+      } catch (err) {
+        console.error('Error reading config file:', err);
+        return null;
+      }
+    };
+
+    // Konfiguration laden
+    const config = loadConfig();
+    if (!config) {
+      throw new Error('Could not load config file');
+    }
+
+
+
     // Nachricht für die E-Mail
     const message = {
       "html": `
@@ -110,10 +132,7 @@ export default async function handler(req, res) {
       "subject": `KOKOMO Solar-Kennzahlen für den Monat ${lastMonthName}`,
       "from_email": "michi@kokomo.house",
       "from_name": "Michi",
-      "to": [
-        { "email": "michi.mauch@gmail.com", "name": "Michi" },
-        //{ "email": "skoelliker@gmail.com", "name": "Sibylle" }
-      ],
+      "to": config.emails, // E-Mail-Adressen aus der Konfigurationsdatei laden
       "attachments": [
         {
           "type": "image/png",
